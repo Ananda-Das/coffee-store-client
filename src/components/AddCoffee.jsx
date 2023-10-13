@@ -1,6 +1,7 @@
-const AddCoffee = () => {
+import Swal from "sweetalert2";
 
-  const handleAddCoffee = e =>{
+const AddCoffee = () => {
+  const handleAddCoffee = (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -13,10 +14,31 @@ const AddCoffee = () => {
     const details = form.details.value;
     const photo = form.photo.value;
 
-    const newCoffee = {name, quantity, supplier, test, category, details, photo}
+    const newCoffee = { name, quantity, supplier, test, category, details, photo };
+
+    //send data to the server
+    fetch("http://localhost:5000/coffee", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newCoffee),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if(data.insertedId){
+          Swal.fire({
+            title: 'Success',
+            text: 'Successfuly Inserted',
+            icon: 'success',
+            confirmButtonText: 'Okay'
+          })
+        }
+      });
 
     console.log(newCoffee);
-  }
+  };
 
   return (
     <div className="bg-[#F4F3F0] p-24">
